@@ -41,7 +41,7 @@ spec:
                     script {
                       openshift.withCluster() {
                         openshift.withProject() {
-                          openshift.newBuild("--name=phpdemo", "https://github.com/rupadhy3/phpdemo.git")
+                          openshift.newBuild("--name=phpdemo", "php:7.2~https://github.com/rupadhy3/phpdemo.git")
                         }
                       }
                     }
