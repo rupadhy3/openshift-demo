@@ -63,7 +63,7 @@ spec:
                     expression {
                       openshift.withCluster() {
                         openshift.withProject() {
-                          return !openshift.selector('dc', 'phpdemo').exists()
+                          return !openshift.selector('bc', 'phpdemo').exists()
                         }
                       }
                     }
