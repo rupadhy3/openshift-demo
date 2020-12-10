@@ -90,7 +90,8 @@ spec:
                     script {
                       openshift.withCluster() {
                         openshift.withProject() {
-                          openshift.selector("dc", "phpdemo").rollout().latest();
+/*                          openshift.selector("dc", "phpdemo").rollout().latest(); */
+                            openshift.set("triggers", "dc/phpdemo", "--from-image=phpdemo:latest", --manual")
                         }
                       }
                     }
