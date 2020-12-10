@@ -6,7 +6,7 @@ metadata:
     labels:
       app: cicd-pipeline
       name: cicd-pipeline
-    name: phpdemo
+    name: demo-pipeline
 spec:
     triggers:
       - type: GitHub
@@ -31,7 +31,7 @@ spec:
                   when {
                     expression {
                       openshift.withCluster() {
-                        openshift.withProject(env.DEV_PROJECT) {
+                        openshift.withProject() {
                           return !openshift.selector("bc", "phpdemo").exists();
                         }
                       }
@@ -40,8 +40,8 @@ spec:
                   steps {
                     script {
                       openshift.withCluster() {
-                        openshift.withProject(env.DEV_PROJECT) {
-                          openshift.newBuild("--name=phpdemo", "php:7.0~https://github.com/rupadhy3/phpdemo.git")
+                        openshift.withProject() {
+                          openshift.newBuild("--name=phpdemo", "https://github.com/rupadhy3/phpdemo.git")
                         }
                       }
                     }
@@ -51,7 +51,7 @@ spec:
                   steps {
                     script {
                       openshift.withCluster() {
-                        openshift.withProject(env.DEV_PROJECT) {
+                        openshift.withProject() {
                           openshift.selector("bc", "phpdemo").startBuild("--wait=true")
                         }
                       }
@@ -62,8 +62,8 @@ spec:
                   when {
                     expression {
                       openshift.withCluster() {
-                        openshift.withProject(env.DEV_PROJECT) {
-                          return !openshift.selector('dc', 'tasks').exists()
+                        openshift.withProject() {
+                          return !openshift.selector('dc', 'phpdemo').exists()
                         }
                       }
                     }
@@ -71,11 +71,11 @@ spec:
                   steps {
                     script {
                       openshift.withCluster() {
-                        openshift.withProject(env.DEV_PROJECT) {
+                        openshift.withProject() {
                           def app = openshift.newApp("php~https://github.com/rupadhy3/phpdemo.git")
                           app.narrow("svc").expose();
 
-                          def dc = openshift.selector("dc", "tasks")
+                          def dc = openshift.selector("dc", "phpdemo")
                           while (dc.object().spec.replicas != dc.object().status.availableReplicas) {
                             sleep 10
                           }
@@ -89,8 +89,8 @@ spec:
                   steps {
                     script {
                       openshift.withCluster() {
-                        openshift.withProject(env.DEV_PROJECT) {
-                          openshift.selector("dc", "demo").rollout().latest();
+                        openshift.withProject() {
+                          openshift.selector("dc", "phpdemo").rollout().latest();
                         }
                       }
                     }
