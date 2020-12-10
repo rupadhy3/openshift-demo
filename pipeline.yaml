@@ -22,7 +22,7 @@ spec:
       jenkinsPipelineStrategy:
         env:
         - name: DEV_PROJECT
-          value: knowledge_event
+          value: knowledge-event
         jenkinsfile: |-
           pipeline {
             agent any
